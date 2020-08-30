@@ -1,0 +1,42 @@
+schema_version: "1.0"
+
+fluid:
+  name: "Water"
+  temperature: "20 degC"
+  pressure: "1 atm"
+  property_backend: "constant"
+  density: "998.2 kg/m**3"
+  viscosity: "1.002e-3 Pa*s"
+
+nodes:
+  T1:
+    type: "reservoir"
+    elevation: "0 m"
+    pressure: "1 atm"
+  J1:
+    type: "junction"
+    elevation: "0 m"
+    flow_demand: "0 kg/s"
+  T2:
+    type: "pressure_boundary"
+    elevation: "15 m"
+    pressure: "1 atm"
+
+edges:
+  PUMP1:
+    type: "pump"
+    from: "T1"
+    to: "J1"
+    curve:
+      flows: ["0 m**3/h", "5 m**3/h", "10 m**3/h", "15 m**3/h"]
+      heads: ["20 m", "19.5 m", "18 m", "15 m"]
+      speed_hz: 50.0
+    speed_hz: 50.0
+  PIPE1:
+    type: "pipe"
+    from: "J1"
+    to: "T2"
+    internal_diameter: "52.5 mm"
+    length: "100 m"
+    elevation_change: "15 m"
+    roughness: "0.045 mm"

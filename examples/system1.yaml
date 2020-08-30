@@ -1,0 +1,39 @@
+schema_version: "1.0"
+
+fluid:
+  name: "Water"
+  temperature: "20 degC"
+  pressure: "1 atm"
+  property_backend: "constant"
+  density: "998.2 kg/m**3"
+  viscosity: "1.002e-3 Pa*s"
+
+nodes:
+  T1:
+    type: "reservoir"
+    elevation: "10 m"
+    pressure: "1 atm"
+  T2:
+    type: "pressure_boundary"
+    elevation: "0 m"
+    pressure: "1 atm"
+  J1:
+    type: "junction"
+    elevation: "0 m"
+    flow_demand: "0 kg/s"
+
+edges:
+  P1:
+    type: "pipe"
+    from: "T1"
+    to: "J1"
+    internal_diameter: "52.5 mm"
+    length: "50 m"
+    elevation_change: "-10 m"
+    roughness: "0.045 mm"
+  V1:
+    type: "valve"
+    from: "J1"
+    to: "T2"
+    internal_diameter: "52.5 mm"
+    Kv: "45.0"

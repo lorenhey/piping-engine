@@ -1,12 +1,12 @@
 import pint
 
 # Inicializar el registro de unidades de pint
-ureg = pint.UnitRegistry(system="mks")
+ureg = pint.UnitRegistry(system="mks", autoconvert_offset_to_baseunit=True)
 
 # Definir unidades de uso común en ingeniería
 # Pint ya incluye la mayoría, pero aseguramos la configuración correcta.
 # Configurar pint para soportar 'bar' y temperaturas.
-ureg.default_format = "~P"
+ureg.formatter.default_format = "~P"
 
 # Pint usa delta_degC para diferencias de temperatura, y degC para valores absolutos
 Q_ = ureg.Quantity
