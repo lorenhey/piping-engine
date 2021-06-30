@@ -11,10 +11,10 @@ class Component(ABC):
         self.to_node = to_node
 
     @abstractmethod
-    def pressure_drop(self, mass_flow: float, rho: float, mu: float) -> Tuple[float, Dict[str, Any]]:
+    def pressure_drop(self, mass_flow: float, rho_ref: float, mu_ref: float, p_from: float = 101325.0) -> Tuple[float, Dict[str, Any]]:
         """
-        Calcula la caída de presión (Pa) a partir del flujo másico (kg/s), 
-        densidad (kg/m3) y viscosidad (Pa.s).
+        Calcula la caída de presión (Pa) a partir del flujo másico (kg/s).
+        p_from es la presión absoluta de entrada (útil para flujos compresibles).
         Retorna (delta_p, info_detallada)
         """
         pass

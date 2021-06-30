@@ -6,6 +6,8 @@ from piping_engine.core.geometry import PipeGeometry
 from piping_engine.components.pipe import Pipe
 from piping_engine.components.pump import Pump, PumpCurve
 from piping_engine.components.valve import Valve
+from piping_engine.components.control_valve import ControlValve
+from piping_engine.components.compressible_pipe import CompressiblePipe
 
 def load_network_from_yaml(filepath: str) -> HydraulicNetwork:
     """Carga una red hidráulica desde un archivo YAML."""
@@ -67,6 +69,14 @@ def load_network_from_yaml(filepath: str) -> HydraulicNetwork:
             )
             comp = Pipe(edge_name, from_node, to_node, geom)
             
+        elif ctype == 'compressible_pipe':
+            geom = PipeGeometry(
+                internal_diameter=Q_(e_data.get('internal_diameter')),
+                roughness=Q_(e_data.get('roughness', '0.045 mm')),
+                length=Q_(e_data.get('length'))
+            )
+            comp = CompressiblePipe(edge_name, from_node, to_node, geom)
+            
         elif ctype == 'valve':
             d_str = e_data.get('internal_diameter')
             d_q = Q_(d_str) if d_str else None
@@ -76,6 +86,17 @@ def load_network_from_yaml(filepath: str) -> HydraulicNetwork:
                 Kv=e_data.get('Kv'),
                 Cv=e_data.get('Cv'),
                 diameter=d_q
+            )
+            
+        elif ctype == 'control_valve':
+            d_str = e_data.get('internal_diameter')
+            d_q = Q_(d_str) if d_str else None
+            comp = ControlValve(
+                edge_name, from_node, to_node,
+                Kv_max=e_data.get('Kv_max'),
+                diameter=d_q,
+                characteristic=e_data.get('characteristic', 'linear'),
+                opening_percent=e_data.get('opening_percent', 100.0)
             )
             
         elif ctype == 'pump':

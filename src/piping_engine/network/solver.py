@@ -36,10 +36,14 @@ def solve_network(network: HydraulicNetwork, tolerance: float = 1e-6) -> Dict[st
 
     # Guess inicial: 
     # Presiones desconocidas = promedio de las conocidas (o 1 atm si no hay)
-    avg_p = np.mean([network.nodes[n].fixed_pressure for n in fixed_nodes]) if fixed_nodes else 101325.0
+    fixed_pressures = [network.nodes[n].fixed_pressure for n in fixed_nodes]
+    if fixed_pressures:
+        p_guess_val = sum(fixed_pressures) / len(fixed_pressures)
+    else:
+        p_guess_val = 101325.0
     
     x0 = np.zeros(N_un + N_b)
-    x0[:N_un] = avg_p
+    x0[:N_un] = p_guess_val
     # Flujos iniciales: 0.1 kg/s (para evitar singularidades en f'(v))
     x0[N_un:] = 0.1
 
@@ -70,8 +74,8 @@ def solve_network(network: HydraulicNetwork, tolerance: float = 1e-6) -> Dict[st
                 p_to = network.nodes[comp.to_node].fixed_pressure
                 
             # p_from - p_to = dp(m)
-            dp, _ = comp.pressure_drop(m, rho_val, mu_val)
-            res[N_un + i] = (p_from - p_to) - dp
+            dp, _ = comp.pressure_drop(m, rho_val, mu_val, p_from=p_from)
+            res[N_un + i] = ((p_from - p_to) - dp) / 100000.0
             
             # Sumar al balance de masa de los nodos
             if comp.from_node in node_idx:
@@ -108,7 +112,12 @@ def solve_network(network: HydraulicNetwork, tolerance: float = 1e-6) -> Dict[st
 
     # Calcular info detallada de componentes
     for i, comp in enumerate(network.components):
-        _, info = comp.pressure_drop(m_final[i], rho_val, mu_val)
+        if comp.from_node in node_idx:
+            p_from_final = P_final[node_idx[comp.from_node]]
+        else:
+            p_from_final = network.nodes[comp.from_node].fixed_pressure
+            
+        _, info = comp.pressure_drop(m_final[i], rho_val, mu_val, p_from=p_from_final)
         results["branch_details"][comp.name] = info
 
     return results

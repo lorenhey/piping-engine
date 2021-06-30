@@ -11,7 +11,7 @@ class Pipe(Component):
         super().__init__(name, from_node, to_node)
         self.geometry = geometry
 
-    def pressure_drop(self, mass_flow: float, rho: float, mu: float) -> Tuple[float, Dict[str, Any]]:
+    def pressure_drop(self, mass_flow: float, rho: float, mu: float, p_from: float = 101325.0) -> Tuple[float, Dict[str, Any]]:
         """
         Calcula la caída de presión en Pascales (Pa).
         Valores positivos indican caída de presión en la dirección from_node -> to_node.

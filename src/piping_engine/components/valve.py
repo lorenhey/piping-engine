@@ -33,7 +33,7 @@ class Valve(Component):
         if self.K is None:
             raise ValueError(f"La válvula {name} debe tener un coeficiente K, o Kv/Cv con un diámetro definido.")
 
-    def pressure_drop(self, mass_flow: float, rho: float, mu: float) -> Tuple[float, Dict[str, Any]]:
+    def pressure_drop(self, mass_flow: float, rho: float, mu: float, p_from: float = 101325.0) -> Tuple[float, Dict[str, Any]]:
         if self.D_m is None:
             raise ValueError(f"Para calcular la pérdida en base a velocidad, {self.name} requiere diámetro.")
             

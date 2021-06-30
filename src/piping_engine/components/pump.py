@@ -51,7 +51,7 @@ class Pump(Component):
         self.curve = curve
         self.speed_hz = speed_hz
 
-    def pressure_drop(self, mass_flow: float, rho: float, mu: float) -> Tuple[float, Dict[str, Any]]:
+    def pressure_drop(self, mass_flow: float, rho: float, mu: float, p_from: float = 101325.0) -> Tuple[float, Dict[str, Any]]:
         """
         Una bomba 'añade' presión, por lo que la caída de presión es negativa en la dirección del flujo.
         dp = P_from - P_to = - (rho * g * H)

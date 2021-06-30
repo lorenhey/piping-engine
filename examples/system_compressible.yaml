@@ -1,0 +1,29 @@
+schema_version: "1.0"
+
+fluid:
+  name: "Air"
+  temperature: "20 degC"
+  pressure: "1 atm"
+  property_backend: "constant"
+  # Propiedades del aire a 1 atm, 20°C
+  density: "1.204 kg/m**3"
+  viscosity: "1.825e-5 Pa*s"
+
+nodes:
+  COMPRESSOR_OUT:
+    type: "pressure_boundary"
+    elevation: "0 m"
+    pressure: "6 bar"  # Presión de salida del compresor
+  WORKSHOP:
+    type: "junction"
+    elevation: "0 m"
+    flow_demand: "0.5 kg/s" # Demanda en el taller (consumo)
+
+edges:
+  AIR_LINE:
+    type: "compressible_pipe"
+    from: "COMPRESSOR_OUT"
+    to: "WORKSHOP"
+    internal_diameter: "100 mm"
+    length: "100 m"            # Larga distancia
+    roughness: "0.05 mm"
